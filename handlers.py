@@ -6,7 +6,6 @@ from aiogram.filters import Command
 from datetime import datetime, timedelta
 import math
 
-
 from states import ExchangeState
 from keyboards import main_kb, confirm_kb
 from config import Config
@@ -30,6 +29,14 @@ async def start_cmd(message: Message):
     )
 
 
+@router.message(F.text == 'Связь с менеджером')
+async def contact_manager(message: Message):
+    await message.answer(
+        text='Ссылка для связи с менеджером:\nt.me/managerbyleo',
+        disable_web_page_preview=True  # Отключаем превью ссылки
+    )
+
+
 @router.message(F.text.lower() == 'актуальный курс')
 async def current_rate(message: Message):
     await message.answer(f'Текущий курс: \n {Config.CURRENT_RATE} ₽ за 1 ¥')
@@ -41,7 +48,7 @@ async def faq(message: Message):
         "<b>Часто задаваемые вопросы (FAQ)</b>\n\n"
 
         "<b>1. Какой у вас курс обмена рублей на юани?</b>\n"
-        "Актуальный курс обмена выводится при запуске бота и доступен по команде /. "
+        "Актуальный курс обмена доступен по кнопке Актуальный курс. "
         "Он может меняться в зависимости от рыночной ситуации.\n\n"
 
         "<b>2. Какая минимальная/максимальная сумма обмена?</b>\n"
@@ -49,7 +56,7 @@ async def faq(message: Message):
         "Более подробную информацию о лимитах можно получить у менеджера.\n\n"
 
         "<b>3. Как происходит обмен?</b>\n"
-        "Для начала обмена нажмите / и следуйте инструкциям. "
+        "Для начала обмена нажмите кнопку Поменять валюту и следуйте инструкциям. "
         "Вам нужно будет указать сумму в рублях, которую хотите обменять, "
         "и реквизиты для получения юаней.\n\n"
 

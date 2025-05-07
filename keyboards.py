@@ -6,7 +6,8 @@ def main_kb() -> ReplyKeyboardMarkup:
         keyboard=[
             [KeyboardButton(text='Актуальный курс')],
             [KeyboardButton(text='Часто задаваемые вопросы')],
-            [KeyboardButton(text='Поменять валюту')]
+            [KeyboardButton(text='Поменять валюту')],
+            [KeyboardButton(text='Связь с менеджером')]
         ],
         resize_keyboard=True
     )
