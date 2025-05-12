@@ -8,3 +8,4 @@ class Config:
     BOT_TOKEN = os.getenv('BOT_TOKEN')
     CURRENT_RATE = os.getenv('CURRENT_RATE')
     ADMIN = os.getenv('ADMIN')
+    ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')

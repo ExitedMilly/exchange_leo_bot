@@ -2,9 +2,10 @@ from aiogram import Router, F, Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.types.input_file import FSInputFile
-from aiogram.filters import Command
+from aiogram.filters import Command, CommandObject
 from datetime import datetime, timedelta
 import math
+import os
 
 from states import ExchangeState
 from keyboards import main_kb, confirm_kb
@@ -14,6 +15,44 @@ last_request_time = {}
 router = Router()
 
 
+@router.message(Command('change_rate'))
+async def change_rate_cmd(message: Message, command: CommandObject):
+    # Проверяем что команда вызвана администратором
+    if str(message.from_user.id) != Config.ADMIN:
+        return
+
+    # Проверяем аргументы
+    args = command.args.split() if command.args else []
+    if len(args) != 2:
+        return await message.answer("Формат: /change_rate [пароль] [новое_значение]")
+
+    password, new_rate = args
+
+    # Проверяем пароль
+    if password != os.getenv('ADMIN_PASSWORD'):
+        return await message.answer("❌ Неверный пароль")
+
+    # Пытаемся обновить курс
+    try:
+        float(new_rate)
+    except ValueError:
+        return await message.answer("❌ Некорректное значение курса")
+
+    # Обновляем .env файл
+    env_path = os.path.join(os.path.dirname(__file__), '.env')
+    with open(env_path, 'r') as f:
+        lines = f.readlines()
+
+    with open(env_path, 'w') as f:
+        for line in lines:
+            if line.startswith('CURRENT_RATE='):
+                f.write(f'CURRENT_RATE={new_rate}\n')
+            else:
+                f.write(line)
+
+    # Обновляем конфиг
+    Config.CURRENT_RATE = new_rate
+    await message.answer(f"✅ Курс успешно изменен на {new_rate}")
 @router.message(Command('start', 'menu'))
 async def start_cmd(message: Message):
     photo = FSInputFile("data/images/welcome.jpg")
